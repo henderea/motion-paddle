@@ -2,7 +2,7 @@
 
 Paddle for vendors: <https://vendors.paddle.com>
 You will have to vendor the Paddle framework yourself because I can't get the gem to bundle it properly.
-More info coming soon.
+More info coming soon.  In the meantime, you can see the gem in use in my MemoryTamer app <https://github.com/henderea/MemoryTamer>.
 
 ## Installation
 
