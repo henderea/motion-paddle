@@ -43,11 +43,6 @@ module Motion
         @paddle.instance_eval(&block) unless block.nil?
         @paddle
       end
-
-      def enable_paddle
-        paddle_framework = File.expand_path(File.join(File.dirname(__FILE__), '../../vendor/Paddle.framework'))
-        self.embedded_frameworks << paddle_framework
-      end
     end
   end
 end
