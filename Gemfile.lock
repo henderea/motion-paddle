@@ -12,5 +12,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 1.7)
   motion-paddle!
-  rake
+  rake (~> 10.3)
