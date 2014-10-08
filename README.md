@@ -1,6 +1,8 @@
 # motion-paddle
 
-TODO: Write a gem description
+Paddle for vendors: <https://vendors.paddle.com>
+You will have to vendor the Paddle framework yourself because I can't get the gem to bundle it properly.
+More info coming soon.
 
 ## Installation
 
