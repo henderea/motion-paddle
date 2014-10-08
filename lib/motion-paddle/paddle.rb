@@ -51,3 +51,13 @@ module Motion
     end
   end
 end
+
+Motion::Project::App.setup do |app|
+  Dir.glob(File.join(File.dirname(__FILE__), '**/*.rb')).each do |file|
+    if app.respond_to?('exclude_from_detect_dependencies')
+      app.exclude_from_detect_dependencies << file
+    end
+  end
+
+  app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
+end

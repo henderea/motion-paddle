@@ -152,13 +152,13 @@ class MotionPaddle
     end
 
     #internal
-    def activated(sender)
-      call_listeners :activated, sender
+    def activated(note)
+      call_listeners :activated, note
     end
 
     #internal
-    def continue(sender)
-      call_listeners :continue, sender
+    def continue(note)
+      call_listeners :continue, note
     end
 
     #internal
