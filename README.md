@@ -3,8 +3,6 @@
 
 Paddle for vendors: <https://vendors.paddle.com>
 
-You will have to vendor the Paddle framework yourself because I can't get the gem to bundle it properly.
-
 You can see the gem in use in my MemoryTamer app <https://github.com/henderea/MemoryTamer>.
 
 ## Installation
@@ -42,8 +40,6 @@ Motion::Project::App.setup do |app|
     set :product_image, 'product_image'
     set :time_trial, true
   end
-  # you have to vendor Paddle.framework yourself
-  app.embedded_frameworks << 'vendor/Paddle.framework'
 end
 ```
 
