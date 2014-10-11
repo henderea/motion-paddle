@@ -1,0 +1,3 @@
+[submodule "vendor/Mac-Framework"]
+	path = vendor/Mac-Framework
+	url = git@github.com:PaddleHQ/Mac-Framework.git

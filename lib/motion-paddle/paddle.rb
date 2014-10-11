@@ -54,5 +54,9 @@ Motion::Project::App.setup do |app|
     end
   end
 
+  parent = File.join(File.dirname(__FILE__), '../..')
+  framework = File.join(parent, "vendor/Mac-Framework/Paddle.framework")
+  app.embedded_frameworks << framework
+
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
 end
