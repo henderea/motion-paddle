@@ -8,6 +8,10 @@ class MotionPaddle
       Paddle.sharedInstance
     end
 
+    def psk_instance
+      PaddleStoreKit.sharedInstance
+    end
+
     def product_id
       self.plist['product_id']
     end
@@ -78,6 +82,14 @@ class MotionPaddle
       paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
     end
 
+    def psk_valid_receipts
+      psk_instance.validReceipts
+    end
+
+    def psk_receipt_for_product_id(product_id)
+      psk_instance.receiptForProductId(product_id)
+    end
+
     def setup(window = nil, &block)
       return unless enabled?
       return unless self.plist
@@ -107,6 +119,34 @@ class MotionPaddle
         @listeners[name.to_sym] ||= []
         @listeners[name.to_sym] << block
       }
+    end
+
+    def psk_show(product_ids = nil, &block)
+      return unless enabled?
+      psk = psk_instance
+      psk.setDelegate(self)
+      if product_ids && !product_ids.empty?
+        psk.showStoreViewForProductIds(product_ids)
+      else
+        psk.showStoreView
+      end
+      listen(:psk_purchase, &block)
+    end
+
+    def psk_show_product(product_id, &block)
+      return unless enabled?
+      psk = psk_instance
+      psk.setDelegate(self)
+      psk.showProduct(product_id)
+      listen(:psk_purchase, &block)
+      end
+
+    def psk_purchase_product(product_id, &block)
+      return unless enabled?
+      psk = psk_instance
+      psk.setDelegate(self)
+      psk.purchaseProduct(product_id)
+      listen(:psk_purchase, &block)
     end
 
     def trial_days_left
@@ -169,6 +209,21 @@ class MotionPaddle
     #internal
     def paddleDidFailWithError(error)
       call_listeners :error, error
+    end
+
+    #internal
+    def PSKProductPurchased(transactionReceipt)
+      call_listeners :psk_purchase, transactionReceipt
+    end
+
+    #internal
+    def PSKDidFailWithError(error)
+      call_listeners :psk_error, error
+    end
+
+    #internal
+    def PSKDidCancel(error)
+      call_listeners :psk_cancel, error
     end
   end
 end
