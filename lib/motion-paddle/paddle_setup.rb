@@ -5,11 +5,11 @@ class MotionPaddle
     end
 
     def paddle_instance
-      Paddle.sharedInstance
+      enabled? && Paddle.sharedInstance
     end
 
     def psk_instance
-      PaddleStoreKit.sharedInstance
+      enabled? && PaddleStoreKit.sharedInstance
     end
 
     def product_id
@@ -62,32 +62,32 @@ class MotionPaddle
     end
 
     def time_trial=(time_trial)
-      paddle_instance.setIsTimeTrial(time_trial)
+      paddle_instance.setIsTimeTrial(time_trial) if enabled?
       @time_trial = time_trial
     end
 
     def can_force_exit?
-      paddle_instance.canForceExit
+      enabled? && paddle_instance.canForceExit
     end
 
     def can_force_exit=(can_force_exit)
-      paddle_instance.setCanForceExit(can_force_exit)
+      enabled? && paddle_instance.setCanForceExit(can_force_exit)
     end
 
     def will_show_licensing_window?
-      paddle_instance.willShowLicensingWindow
+      enabled? && paddle_instance.willShowLicensingWindow
     end
 
     def will_show_licensing_window=(will_show_licensing_window)
-      paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
+      enabled? && paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
     end
 
     def psk_valid_receipts
-      psk_instance.validReceipts
+      enabled? && psk_instance.validReceipts
     end
 
     def psk_receipt_for_product_id(product_id)
-      psk_instance.receiptForProductId(product_id)
+      enabled? && psk_instance.receiptForProductId(product_id)
     end
 
     def setup(window = nil, &block)
@@ -150,31 +150,31 @@ class MotionPaddle
     end
 
     def trial_days_left
-      paddle_instance.daysRemainingOnTrial
+      enabled? && paddle_instance.daysRemainingOnTrial
     end
 
     def activated?
-      paddle_instance.productActivated
+      enabled? && paddle_instance.productActivated
     end
 
     def show_licencing
-      paddle_instance.showLicencing
+      enabled? && paddle_instance.showLicencing
     end
 
     alias :show_licensing :show_licencing
 
     def activated_licence_code
-      paddle_instance.activatedLicenceCode
+      enabled? && paddle_instance.activatedLicenceCode
     end
 
     alias :activated_license_code :activated_licence_code
 
     def activated_email
-      paddle_instance.activatedEmail
+      enabled? && paddle_instance.activatedEmail
     end
 
     def deactivate_licence
-      paddle_instance.deactivateLicence
+      enabled? && paddle_instance.deactivateLicence
     end
 
     alias :deactivate_license :deactivate_licence
@@ -222,8 +222,8 @@ class MotionPaddle
     end
 
     #internal
-    def PSKDidCancel(error)
-      call_listeners :psk_cancel, error
+    def PSKDidCancel
+      call_listeners :psk_cancel
     end
   end
 end

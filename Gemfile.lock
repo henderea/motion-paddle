@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motion-paddle (1.0)
+    motion-paddle (1.1.2)
 
 GEM
   remote: https://rubygems.org/
