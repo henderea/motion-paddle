@@ -55,4 +55,6 @@ Motion::Project::App.setup do |app|
   end
 
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
+
+  app.pods.pod 'Paddle', '~> 2.2'
 end
