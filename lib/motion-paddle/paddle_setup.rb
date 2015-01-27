@@ -181,7 +181,7 @@ class MotionPaddle
 
     #internal
     def plist
-      (@plist = NSBundle.mainBundle.objectForInfoDictionaryKey('MotionPaddle')) && (@plist = @plist.first) unless @plist
+      (@plist = NSBundle.mainBundle.objectForInfoDictionaryKey("MotionPaddle_#{NSBundle.mainBundle.infoDictionary['CFBundleShortVersionString']}")) && (@plist = @plist.first) unless @plist
       @plist
     end
 

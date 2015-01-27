@@ -10,8 +10,8 @@ class PaddleConfig
   end
 
   def set(var, val)
-    @config.info_plist['MotionPaddle'] ||= [{}]
-    @config.info_plist['MotionPaddle'].first[var.to_s] = val
+    @config.info_plist["MotionPaddle_#{@config.short_version}"] ||= [{}]
+    @config.info_plist["MotionPaddle_#{@config.short_version}"].first[var.to_s] = val
     send("#{var}=", val)
   end
 

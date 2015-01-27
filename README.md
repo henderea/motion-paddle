@@ -5,6 +5,8 @@ Paddle for vendors: <https://vendors.paddle.com>
 
 As of version 1.1.3, the Paddle framework is automatically included as a CocoaPod.
 
+In version 1.1.4, a workaround was added for an issue related to existing installations of an app using `motion-paddle` not getting updated values when something was changed in the Rakefile.  Now, the short version string is used in the section name of the `motion-paddle` part of the Info.plist.  **You will need to set `app.short_version` before calling `app.paddle`.**
+
 You can see the gem in use in my MemoryTamer app <https://github.com/henderea/MemoryTamer>.
 
 ## Installation
