@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motion-paddle (1.1.4)
+    motion-paddle (1.1.4.1)
       motion-cocoapods (~> 1.7)
 
 GEM

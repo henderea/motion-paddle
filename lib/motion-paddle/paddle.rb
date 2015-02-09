@@ -56,5 +56,5 @@ Motion::Project::App.setup do |app|
 
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
 
-  app.pods.pod 'Paddle', '~> 2.2'
+  app.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
 end
