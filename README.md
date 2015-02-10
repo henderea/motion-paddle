@@ -87,6 +87,14 @@ end
 * `MotionPaddle.can_force_exit=` - set the above value
 * `MotionPaddle.will_show_licensing_window?` - get the Paddle framework setting for whether the app will show the licensing window right away or wait until `MotionPaddle.show_licensing` is called
 * `MotionPaddle.will_show_licensing_window=` - set the above value
+* `MotionPaddle.has_tracking_started?` - get the Paddle framework property `hasTrackingStarted`
+* `MotionPaddle.has_tracking_started=` - set the above property (not sure if it can actually be set)
+* `MotionPaddle.will_simplify_views?` - get the Paddle framework property `willSimplifyViews`
+* `MotionPaddle.will_simplify_views=` - set the above property (not sure if it can actually be set)
+* `MotionPaddle.will_show_activation_alert?` - get the Paddle framework property `willShowActivationAlert`
+* `MotionPaddle.will_show_activation_alert=` - set the above property
+* `MotionPaddle.will_continue_at_trial_end?` - get the Paddle framework setting for whether the app will force license or quit on trial end or will allow use to continue with (optionally) limited functionality
+* `MotionPaddle.will_continue_at_trial_end=` - set the above property
 * `MotionPaddle.trial_days_left` - get the number of days left in the trial
 * `MotionPaddle.deactivate_license` - deactivate the license
 
