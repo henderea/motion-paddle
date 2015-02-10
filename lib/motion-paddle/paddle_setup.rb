@@ -82,6 +82,38 @@ class MotionPaddle
       enabled? && paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
     end
 
+    def has_tracking_started?
+      enabled? && paddle_instance.hasTrackingStarted
+    end
+
+    def has_tracking_started=(has_tracking_started)
+      enabled? && paddle_instance.setHasTrackingStarted(has_tracking_started)
+    end
+
+    def will_simplify_views?
+      enabled? && paddle_instance.willSimplifyViews
+    end
+
+    def will_simplify_views=(will_simplify_views)
+      enabled? && paddle_instance.setWillSimplifyViews(will_simplify_views)
+    end
+
+    def will_show_activation_alert?
+      enabled? && paddle_instance.willShowActivationAlert
+    end
+
+    def will_show_activation_alert=(will_show_activation_alert)
+      enabled? && paddle_instance.setWillShowActivationAlert(will_show_activation_alert)
+    end
+
+    def will_continue_at_trial_end?
+      enabled? && paddle_instance.willContinueAtTrialEnd
+    end
+
+    def will_continue_at_trial_end=(will_continue_at_trial_end)
+      enabled? && paddle_instance.setWillContinueAtTrialEnd(will_continue_at_trial_end)
+    end
+
     def psk_valid_receipts
       enabled? && psk_instance.validReceipts
     end
