@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    motion-paddle (1.1.7)
-      motion-cocoapods (~> 1.7.1)
+    motion-paddle (1.1.6)
+      motion-cocoapods (~> 1.7, >= 1.7.1)
 
 GEM
   remote: https://rubygems.org/
@@ -61,7 +61,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.9)
+  bundler (~> 1.10)
   motion-paddle!
   rake (~> 10.4)
 
