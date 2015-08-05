@@ -77,6 +77,39 @@ def applicationDidFinishLaunching(notification)
 end
 ```
 
+### Choosing which store to build for
+
+Use the `store` environment variable to choose which version of the Paddle framework 
+you wish to use: the one for the Paddle store or for the Mac App Store.
+
+```
+rake store=paddle
+rake store=mas
+```
+
+If you are building an app that will run on both the Paddle store and the Mac App Store,
+you will want to update your `Rakefile` to something like this:
+
+```ruby
+Motion::Project::App.setup do |app|
+  #...
+  app.paddle do
+    if ENV.fetch('store', 'none') == 'mas'
+      set :product_id, 'mas_product_id'
+    else
+      set :product_id, 'product_id'
+    end
+    set :vendor_id, 'vendor_id'
+    set :api_key, 'api_key'
+    set :store, ENV.fetch('store', 'paddle')
+    
+    ...
+    
+  end
+end
+```
+
+
 ###Other `MotionPaddle` methods not in the above example
 
 * `MotionPaddle.enabled?` - true if Paddle framework is included
@@ -97,6 +130,8 @@ end
 * `MotionPaddle.will_continue_at_trial_end=` - set the above property
 * `MotionPaddle.trial_days_left` - get the number of days left in the trial
 * `MotionPaddle.deactivate_license` - deactivate the license
+* `MotionPaddle.paddle_store?` - returns true if using the Paddle store
+* `MotionPaddle.mas_store?` - returns true if using the Mac App Store
 
 **NOTE:** some methods offer a version that uses the spelling "licen**c**e".  This is the name used for the methods in the Paddle framework, so I included this spelling as an option.  The `will_show_licensing_window` methods are the only ones with it spelled with an "s" in the Paddle framework, and they do not have the "c" version in `MotionPaddle`.
 
