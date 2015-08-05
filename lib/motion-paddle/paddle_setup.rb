@@ -1,7 +1,11 @@
 class MotionPaddle
   class << self
     def enabled?
-      (NSClassFromString('Paddle')!=nil)
+      (NSClassFromString('Paddle') != nil)
+    end
+    
+    def enabled_paddle_store?
+      enabled? && paddle_store? 
     end
 
     def paddle_instance
@@ -10,6 +14,10 @@ class MotionPaddle
 
     def psk_instance
       enabled? && PaddleStoreKit.sharedInstance
+    end
+
+    def store
+      self.plist['store'] || 'paddle'
     end
 
     def product_id
@@ -62,64 +70,64 @@ class MotionPaddle
     end
 
     def time_trial=(time_trial)
-      paddle_instance.setIsTimeTrial(time_trial) if enabled?
+      paddle_instance.setIsTimeTrial(time_trial) if enabled_paddle_store?
       @time_trial = time_trial
     end
 
     def can_force_exit?
-      enabled? && paddle_instance.canForceExit
+      enabled_paddle_store? && paddle_instance.canForceExit
     end
 
     def can_force_exit=(can_force_exit)
-      enabled? && paddle_instance.setCanForceExit(can_force_exit)
+      enabled_paddle_store? && paddle_instance.setCanForceExit(can_force_exit)
     end
 
     def will_show_licensing_window?
-      enabled? && paddle_instance.willShowLicensingWindow
+      enabled_paddle_store? && paddle_instance.willShowLicensingWindow
     end
 
     def will_show_licensing_window=(will_show_licensing_window)
-      enabled? && paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
+      enabled_paddle_store? && paddle_instance.setWillShowLicensingWindow(will_show_licensing_window)
     end
 
     def has_tracking_started?
-      enabled? && paddle_instance.hasTrackingStarted
+      enabled_paddle_store? && paddle_instance.hasTrackingStarted
     end
 
     def has_tracking_started=(has_tracking_started)
-      enabled? && paddle_instance.setHasTrackingStarted(has_tracking_started)
+      enabled_paddle_store? && paddle_instance.setHasTrackingStarted(has_tracking_started)
     end
 
     def will_simplify_views?
-      enabled? && paddle_instance.willSimplifyViews
+      enabled_paddle_store? && paddle_instance.willSimplifyViews
     end
 
     def will_simplify_views=(will_simplify_views)
-      enabled? && paddle_instance.setWillSimplifyViews(will_simplify_views)
+      enabled_paddle_store? && paddle_instance.setWillSimplifyViews(will_simplify_views)
     end
 
     def will_show_activation_alert?
-      enabled? && paddle_instance.willShowActivationAlert
+      enabled_paddle_store? && paddle_instance.willShowActivationAlert
     end
 
     def will_show_activation_alert=(will_show_activation_alert)
-      enabled? && paddle_instance.setWillShowActivationAlert(will_show_activation_alert)
+      enabled_paddle_store? && paddle_instance.setWillShowActivationAlert(will_show_activation_alert)
     end
 
     def will_continue_at_trial_end?
-      enabled? && paddle_instance.willContinueAtTrialEnd
+      enabled_paddle_store? && paddle_instance.willContinueAtTrialEnd
     end
 
     def will_continue_at_trial_end=(will_continue_at_trial_end)
-      enabled? && paddle_instance.setWillContinueAtTrialEnd(will_continue_at_trial_end)
+      enabled_paddle_store? && paddle_instance.setWillContinueAtTrialEnd(will_continue_at_trial_end)
     end
 
     def psk_valid_receipts
-      enabled? && psk_instance.validReceipts
+      enabled_paddle_store? && psk_instance.validReceipts
     end
 
     def psk_receipt_for_product_id(product_id)
-      enabled? && psk_instance.receiptForProductId(product_id)
+      enabled_paddle_store? && psk_instance.receiptForProductId(product_id)
     end
 
     def setup(window = nil, &block)
@@ -129,22 +137,24 @@ class MotionPaddle
       paddle.setProductId(product_id)
       paddle.setVendorId(vendor_id)
       paddle.setApiKey(api_key)
-      product_info = {KPADCurrentPrice  => current_price,
-                      KPADDevName       => dev_name,
-                      KPADCurrency      => currency,
-                      KPADImage         => image,
-                      KPADTrialText     => trial_text,
-                      KPADProductName   => product_name,
-                      KPADProductImage  => product_image }
-      if time_trial?
-        product_info.merge!({KPADTrialDuration => trial_duration})
+      if paddle_store?
+        product_info = {KPADCurrentPrice  => current_price,
+                        KPADDevName       => dev_name,
+                        KPADCurrency      => currency,
+                        KPADImage         => image,
+                        KPADTrialText     => trial_text,
+                        KPADProductName   => product_name,
+                        KPADProductImage  => product_image }
+        if time_trial?
+          product_info.merge!({KPADTrialDuration => trial_duration})
+        end
+        paddle.startLicensing(product_info, timeTrial: time_trial?, withWindow: window)
+        NSNotificationCenter.defaultCenter.addObserver(self, selector: 'activated:', name: KPADActivated, object: nil)
+        NSNotificationCenter.defaultCenter.addObserver(self, selector: 'continue:', name: KPADContinue, object: nil)
+        paddle.setDelegate(self)
+        # block.call unless block.nil?
+        listen(:activated, :continue, &block)
       end
-      paddle.startLicensing(product_info, timeTrial: time_trial?, withWindow: window)
-      NSNotificationCenter.defaultCenter.addObserver(self, selector: 'activated:', name: KPADActivated, object: nil)
-      NSNotificationCenter.defaultCenter.addObserver(self, selector: 'continue:', name: KPADContinue, object: nil)
-      paddle.setDelegate(self)
-      # block.call unless block.nil?
-      listen(:activated, :continue, &block)
     end
 
     def listen(*names, &block)
@@ -157,7 +167,7 @@ class MotionPaddle
     end
 
     def psk_show(product_ids = nil, &block)
-      return unless enabled?
+      return unless enabled_paddle_store?
       psk = psk_instance
       psk.setDelegate(self)
       if product_ids && !product_ids.empty?
@@ -169,7 +179,7 @@ class MotionPaddle
     end
 
     def psk_show_product(product_id, &block)
-      return unless enabled?
+      return unless enabled_paddle_store?
       psk = psk_instance
       psk.setDelegate(self)
       psk.showProduct(product_id)
@@ -177,7 +187,7 @@ class MotionPaddle
       end
 
     def psk_purchase_product(product_id, &block)
-      return unless enabled?
+      return unless enabled_paddle_store?
       psk = psk_instance
       psk.setDelegate(self)
       psk.purchaseProduct(product_id)
@@ -185,34 +195,42 @@ class MotionPaddle
     end
 
     def trial_days_left
-      enabled? && paddle_instance.daysRemainingOnTrial
+      enabled_paddle_store? && paddle_instance.daysRemainingOnTrial
     end
 
     def activated?
-      enabled? && paddle_instance.productActivated
+      enabled_paddle_store? && paddle_instance.productActivated
     end
 
     def show_licencing
-      enabled? && paddle_instance.showLicencing
+      enabled_paddle_store? && paddle_instance.showLicencing
     end
 
     alias :show_licensing :show_licencing
 
     def activated_licence_code
-      enabled? && paddle_instance.activatedLicenceCode
+      enabled_paddle_store? && paddle_instance.activatedLicenceCode
     end
 
     alias :activated_license_code :activated_licence_code
 
     def activated_email
-      enabled? && paddle_instance.activatedEmail
+      enabled_paddle_store? && paddle_instance.activatedEmail
     end
 
     def deactivate_licence
-      enabled? && paddle_instance.deactivateLicence
+      enabled_paddle_store? && paddle_instance.deactivateLicence
     end
 
     alias :deactivate_license :deactivate_licence
+
+    def paddle_store?
+      self.plist['store'] == 'paddle'
+    end
+
+    def mas_store?
+      self.plist['store'] == 'mas'
+    end
 
     #internal
     def plist
