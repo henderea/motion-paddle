@@ -129,14 +129,17 @@ class MotionPaddle
       paddle.setProductId(product_id)
       paddle.setVendorId(vendor_id)
       paddle.setApiKey(api_key)
-      paddle.startLicensing({ KPADCurrentPrice  => current_price,
-                              KPADDevName       => dev_name,
-                              KPADCurrency      => currency,
-                              KPADImage         => image,
-                              KPADProductName   => product_name,
-                              KPADTrialDuration => trial_duration,
-                              KPADTrialText     => trial_text,
-                              KPADProductImage  => product_image }, timeTrial: time_trial?, withWindow: window)
+      product_info = {KPADCurrentPrice  => current_price,
+                      KPADDevName       => dev_name,
+                      KPADCurrency      => currency,
+                      KPADImage         => image,
+                      KPADTrialText     => trial_text,
+                      KPADProductName   => product_name,
+                      KPADProductImage  => product_image }
+      if time_trial?
+        product_info.merge!({KPADTrialDuration => trial_duration})
+      end
+      paddle.startLicensing(product_info, timeTrial: time_trial?, withWindow: window)
       NSNotificationCenter.defaultCenter.addObserver(self, selector: 'activated:', name: KPADActivated, object: nil)
       NSNotificationCenter.defaultCenter.addObserver(self, selector: 'continue:', name: KPADContinue, object: nil)
       paddle.setDelegate(self)
