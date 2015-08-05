@@ -10,6 +10,8 @@ rescue LoadError
 # ignored
 end
 
+require 'motion-cocoapods'
+
 Motion::Project::App.setup do |app|
   app.name       = 'motion-paddle'
   app.identifier = 'us.myepg.motion-paddle'
