@@ -10,7 +10,6 @@ class PaddleConfig
   def initialize(config, options)
     @config = config
     @options = options
-    set :store, mas_store? ? 'mas' : 'paddle'
   end
 
   def mas_store?
@@ -54,6 +53,12 @@ module Motion
       def paddle(options = {}, &block)
         @paddle ||= PaddleConfig.new(self, options)
         @paddle.instance_eval(&block) unless block.nil?
+        @paddle.set :store, @paddle.mas_store? ? 'mas' : 'paddle'
+        if @paddle.paddle_store?
+          @pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
+        elsif @paddle.mas_store?
+          @pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
+        end
         @paddle
       end
     end
@@ -70,10 +75,5 @@ Motion::Project::App.setup do |app|
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
   
   # include the correct framework for the store we're targeting
-  if app.paddle.paddle_store?
-    app.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
-  elsif app.paddle.mas_store?
-    app.pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
-  end
   
 end
