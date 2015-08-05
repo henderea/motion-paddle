@@ -3,7 +3,8 @@ unless defined?(Motion::Project::Config)
 end
 
 class PaddleConfig
-  attr_accessor :product_id, :vendor_id, :api_key, :current_price, :dev_name, :currency, :image, :product_name, :trial_duration, :trial_text, :product_image, :time_trial
+  attr_accessor :product_id, :vendor_id, :api_key, :current_price, :dev_name, :currency, :image, 
+                :product_name, :trial_duration, :trial_text, :product_image, :time_trial, :store
 
   def initialize(config)
     @config = config
@@ -28,7 +29,8 @@ class PaddleConfig
         trial_duration: trial_duration,
         trial_text: trial_text,
         product_image: product_image,
-        time_trial: time_trial
+        time_trial: time_trial,
+        store: store
     }.inspect
   end
 end
@@ -55,6 +57,12 @@ Motion::Project::App.setup do |app|
   end
 
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
-
-  app.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
+  
+  # include the correct framework for the store we're targeting
+  if ENV.fetch('store', 'paddle').downcase == 'paddle'
+    app.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
+  elsif ENV.fetch('store', 'paddle').downcase == 'mas'
+    app.pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
+  end
+  
 end
