@@ -94,7 +94,7 @@ you will want to update your `Rakefile` to something like this:
 Motion::Project::App.setup do |app|
   #...
   app.paddle do
-    if ENV.fetch('store', 'none') == 'mas'
+    if mas_store?
       set :product_id, 'mas_product_id'
     else
       set :product_id, 'product_id'
@@ -108,6 +108,8 @@ Motion::Project::App.setup do |app|
   end
 end
 ```
+
+There is also a `paddle_store?` method available in the block passed to `app.paddle`
 
 
 ###Other `MotionPaddle` methods not in the above example

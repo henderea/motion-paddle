@@ -10,6 +10,14 @@ class PaddleConfig
     @config = config
   end
 
+  def mas_store?
+    ENV.fetch('store', 'paddle').downcase == 'mas'
+  end
+
+  def paddle_store?
+    ENV.fetch('store', 'paddle').downcase == 'paddle'
+  end
+
   def set(var, val)
     @config.info_plist["MotionPaddle_#{@config.short_version}"] ||= [{}]
     @config.info_plist["MotionPaddle_#{@config.short_version}"].first[var.to_s] = val
