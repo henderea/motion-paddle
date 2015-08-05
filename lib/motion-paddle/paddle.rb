@@ -3,19 +3,22 @@ unless defined?(Motion::Project::Config)
 end
 
 class PaddleConfig
+  attr_reader :options
   attr_accessor :product_id, :vendor_id, :api_key, :current_price, :dev_name, :currency, :image, 
                 :product_name, :trial_duration, :trial_text, :product_image, :time_trial, :store
 
-  def initialize(config)
+  def initialize(config, options)
     @config = config
+    @options = options
+    set :store, mas_store? ? 'mas' : 'paddle'
   end
 
   def mas_store?
-    ENV.fetch('store', 'paddle').downcase == 'mas'
+    @options[:force_mas] || ENV.fetch('store', 'paddle').downcase == 'mas'
   end
 
   def paddle_store?
-    ENV.fetch('store', 'paddle').downcase == 'paddle'
+    !@options[:force_mas] && ENV.fetch('store', 'paddle').downcase == 'paddle'
   end
 
   def set(var, val)
@@ -48,8 +51,8 @@ module Motion
     class Config
       variable :paddle
 
-      def paddle(&block)
-        @paddle ||= PaddleConfig.new(self)
+      def paddle(options = {}, &block)
+        @paddle ||= PaddleConfig.new(self, options)
         @paddle.instance_eval(&block) unless block.nil?
         @paddle
       end
@@ -67,9 +70,9 @@ Motion::Project::App.setup do |app|
   app.files.push(File.join(File.dirname(__FILE__), 'paddle_setup.rb'))
   
   # include the correct framework for the store we're targeting
-  if ENV.fetch('store', 'paddle').downcase == 'paddle'
+  if app.paddle.paddle_store?
     app.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
-  elsif ENV.fetch('store', 'paddle').downcase == 'mas'
+  elsif app.paddle.mas_store?
     app.pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
   end
   

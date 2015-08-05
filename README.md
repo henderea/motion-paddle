@@ -101,7 +101,22 @@ Motion::Project::App.setup do |app|
     end
     set :vendor_id, 'vendor_id'
     set :api_key, 'api_key'
-    set :store, ENV.fetch('store', 'paddle')
+    
+    ...
+    
+  end
+end
+```
+
+If you will **only** be doing the mac app store, you can avoid having to use the environment variable every time by changing your `Rakefile` to do something like this:
+
+```ruby
+Motion::Project::App.setup do |app|
+  #...
+  app.paddle(force_mas: true) do
+    set :product_id, 'mas_product_id'
+    set :vendor_id, 'vendor_id'
+    set :api_key, 'api_key'
     
     ...
     
