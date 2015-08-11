@@ -55,9 +55,9 @@ module Motion
         @paddle.instance_eval(&block) unless block.nil?
         @paddle.set :store, @paddle.mas_store? ? 'mas' : 'paddle'
         if @paddle.paddle_store?
-          @pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
+          self.pods.pod 'Paddle', git: 'https://github.com/PaddleHQ/Mac-Framework.git'
         elsif @paddle.mas_store?
-          @pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
+          self.pods.pod 'Paddle-MAS', git: 'https://github.com/PaddleHQ/Paddle-MAS.git'
         end
         @paddle
       end
